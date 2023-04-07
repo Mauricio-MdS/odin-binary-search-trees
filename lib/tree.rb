@@ -100,6 +100,10 @@ class Tree
     visited
   end
 
+  def rebalance
+    @root = build_tree in_order
+  end
+
   private
 
   def build_node(array)
