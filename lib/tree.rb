@@ -55,6 +55,15 @@ class Tree
     visited
   end
 
+  def insert(value)
+    new_node = Node.new(value)
+    return @root = new_node unless @root
+
+    current = @root
+    current = current.navigate(value) until current.navigate(value).nil? || current == current.navigate(value)
+    point_to(current, new_node)
+  end
+
   def level_order(&block)
     queue = @root.nil? ? [] : [@root]
     visited = []
@@ -154,7 +163,7 @@ class Tree
   end
 
   def point_to(parent, child)
-    return if child.nil?
+    return if child.nil? || parent == child
 
     if child < parent
       parent.left = child
