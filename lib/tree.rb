@@ -41,6 +41,20 @@ class Tree
     end
   end
 
+  def level_order
+    queue = @root.nil? ? [] : [@root]
+    values = []
+
+    until queue.empty?
+      current = queue.shift
+      queue.push(current.left) if current.left
+      queue.push(current.right) if current.right
+      values.push(current.data)
+      yield(current.data) if block_given?
+    end
+    values
+  end
+
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
