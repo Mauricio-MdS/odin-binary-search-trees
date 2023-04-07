@@ -8,6 +8,16 @@ class Tree
     @root = build_tree(array)
   end
 
+  # Checks if the tree is balanced.
+  # A balanced tree is one where the difference between heights of left subtree and right subtree of every node is not more than 1.
+  def balanced?(node = @root, balanced = true)
+    return false if node.left && node.right && ((height(node.left) - height(node.right)).abs > 1)
+
+    balanced?(node.left, balanced) if node.left
+    balanced?(node.right, balanced) if node.right
+    balanced
+  end
+
   def delete(value)
     node = find(value)
     parent = find_parent(value)
