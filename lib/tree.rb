@@ -25,6 +25,14 @@ class Tree
     pointer
   end
 
+  def in_order(node = @root, visited = [], &block)
+    visited = in_order(node.left, visited, &block) if node.left
+    block.call(node.data) if block_given?
+    visited.push(node.data)
+    visited = in_order(node.right, visited, &block) if node.right
+    visited
+  end
+
   def level_order(&block)
     queue = @root.nil? ? [] : [@root]
     visited = []
@@ -34,14 +42,31 @@ class Tree
       queue.push(current.left) if current.left
       queue.push(current.right) if current.right
       visited.push current.data
+      block.call(current.data) if block_given?
     end
-    block_given? ? visited.each { |x| block.call(x) } : visited
+    visited
+  end
+
+  def pre_order(node = @root, visited = [], &block)
+    block.call(node.data) if block_given?
+    visited.push(node.data)
+    visited = pre_order(node.left, visited, &block) if node.left
+    visited = pre_order(node.right, visited, &block) if node.right
+    visited
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
     pretty_print(node.right, "#{prefix}#{is_left ? '│   ' : '    '}", false) if node.right
     puts "#{prefix}#{is_left ? '└── ' : '┌── '}#{node.data}"
     pretty_print(node.left, "#{prefix}#{is_left ? '    ' : '│   '}", true) if node.left
+  end
+
+  def post_order(node = @root, visited = [], &block)
+    visited = post_order(node.left, visited, &block) if node.left
+    visited = post_order(node.right, visited, &block) if node.right
+    block.call(node.data) if block_given?
+    visited.push(node.data)
+    visited
   end
 
   private
