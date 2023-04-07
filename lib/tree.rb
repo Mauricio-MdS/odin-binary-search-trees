@@ -19,10 +19,22 @@ class Tree
     end
   end
 
+  # Depth is the number of edges in path from a given node to the tree’s root node.
+  def depth(node)
+    height(@root) - height(node)
+  end
+
   def find(value)
     pointer = @root
     pointer = pointer.navigate(value) until pointer.nil? || pointer.data == value
     pointer
+  end
+
+  # Height is the number of edges in longest path from a given node to a leaf node.
+  def height(node, height = 0)
+    left_height = node.left ? height(node.left, height + 1) : height
+    right_heigt = node.right ? height(node.right, height + 1) : height
+    left_height > right_heigt ? left_height : right_heigt
   end
 
   def in_order(node = @root, visited = [], &block)
