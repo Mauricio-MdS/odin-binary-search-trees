@@ -25,34 +25,17 @@ class Tree
     pointer
   end
 
-  def insert(value)
-    new_node = Node.new(value)
-    @root = new_node if @root.nil?
-
-    pointer = @root
-    loop do
-      return nil if value == pointer.data
-
-      if pointer.navigate(value).nil?
-        return value < pointer.data ? pointer.left = new_node : pointer.right = new_node
-      end
-
-      pointer = pointer.navigate(value)
-    end
-  end
-
-  def level_order
+  def level_order(&block)
     queue = @root.nil? ? [] : [@root]
-    values = []
+    visited = []
 
     until queue.empty?
       current = queue.shift
       queue.push(current.left) if current.left
       queue.push(current.right) if current.right
-      values.push(current.data)
-      yield(current.data) if block_given?
+      visited.push current.data
     end
-    values
+    block_given? ? visited.each { |x| block.call(x) } : visited
   end
 
   def pretty_print(node = @root, prefix = '', is_left = true)
